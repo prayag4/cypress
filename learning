@@ -1,0 +1,115 @@
+cypress install command - npm install cypress --save-dev
+cypress project intialization command - npx cypress open and set confgiguration from window
+
+FIXTURES
+++++++++++++
+In Cypress, a fixture is a file that contains mock data or test data used during your tests. Fixtures allow you to separate your test logic from test data, making your tests cleaner, reusable, and more maintainable.
+
+Fixture Basics
+Stored in: cypress/fixtures/
+Format: Usually JSON, but can be .js, .txt, .csv, etc.
+Usage: Use cy.fixture() to load the data into your tests or support files.
+
+📁 Example Directory Structure
+cypress/
+├── fixtures/
+│   └── user.json
+├── e2e/
+│   └── login.spec.js
+
+
+📄 Example: user.json (Fixture File)
+{
+  "validUser": {
+    "email": "user@example.com",
+    "password": "Test1234"
+  },
+  "invalidUser": {
+    "email": "invalid@example.com",
+    "password": "wrongpass"
+  }
+}
+
+
+✅ Example Test Using the Fixture
+describe('Login Test with Fixture', () => {
+    beforeEach(() => {
+        cy.fixture('user').as('userData') // load user.json and alias it
+    })
+
+    it('logs in with valid credentials', function () {
+        cy.visit('/login')
+        cy.get('#email').type(this.userData.validUser.email)
+        cy.get('#password').type(this.userData.validUser.password)
+        cy.get('button[type="submit"]').click()
+
+        cy.url().should('include', '/dashboard')
+    })
+})
+
+🔌 Advanced Use: Using Fixtures with cy.intercept():
+Fixtures can be used to mock API responses when you're testing without hitting real servers.
+cy.intercept('GET', '/api/user', { fixture: 'user.json' }).as('getUser')
+
+
+CYPRESS/SUPPORT/E2E.JS FILE
++++++++++++++++++++++++++++++
+✅ What is cypress/support/e2e.js?
+cypress/support/e2e.js is the support file for all your E2E tests.
+It acts like a global setup file, and Cypress automatically loads it before every E2E spec file runs.
+
+purpose of e2e.js
+
+| What it does                          | Example                                   |
+| ------------------------------------- | ----------------------------------------- |
+| ✅ Loads global utilities or functions | `import './commands'`                     |
+| ✅ Registers custom commands           | You can define custom Cypress actions     |
+| ✅ Sets up global hooks                | `before()`, `after()` for all tests       |
+| ✅ Registers plugins or libraries      | e.g., `import 'cypress-iframe'`           |
+| ✅ Catches global errors or logs       | Use `Cypress.on('uncaught:exception', …)` |
+
+
+📦 Typical Content in e2e.js:
+// Load custom commands
+import './commands'
+
+// Import 3rd-party plugins
+import 'cypress-iframe'
+import 'cypress-file-upload'
+
+// Optional: global setup before any test runs
+before(() => {
+  cy.log('Starting the test suite...')
+})
+
+// Optional: ignore certain uncaught errors
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false prevents Cypress from failing the test
+  return false
+})
+
+
+📁 Folder Structure Context
+cypress/
+├── e2e/
+│   └── login.spec.js        <-- Your actual test file
+│
+├── support/
+│   ├── e2e.js               <-- Auto-loaded before every test
+│   └── commands.js          <-- Your custom Cypress commands
+
+
+🛠️ Example: Custom Command via commands.js
+// cypress/support/commands.js
+Cypress.Commands.add('login', (email, password) => {
+    cy.visit('/login')
+    cy.get('#email').type(email)
+    cy.get('#password').type(password)
+    cy.get('button[type="submit"]').click()
+})
+
+Then in your login.spec.js:
+it('logs in', () => {
+    cy.login('user@example.com', 'password123')
+})
+Because e2e.js imports commands.js, you can use cy.login() in any test.
