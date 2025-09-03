@@ -1,0 +1,34 @@
+# Cypress output folders
+cypress/screenshots/
+cypress/videos/
+
+# Cypress cache (optional, speeds up test runs)
+.cache/
+node_modules/
+package-lock.json
+yarn.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs/editors
+.vscode/
+.idea/
+
+# Environment/Config files (optional - based on project)
+.env
+.env.local
+cypress.env.json
+
+# Coverage reports (if using code coverage tools)
+coverage/
+.nyc_output/
+
+# Test results (if using mochawesome or similar)
+mochawesome-report/

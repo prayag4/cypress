@@ -1,3 +1,8 @@
+for SSH authenitcation 
++++++++++++++++
+git remote set-url origin git@github-prayag:prayag4/cypress.git                                  
+
+
 cypress install command - npm install cypress --save-dev
 cypress project intialization command - npx cypress open and set confgiguration from window
 
@@ -113,3 +118,5 @@ it('logs in', () => {
     cy.login('user@example.com', 'password123')
 })
 Because e2e.js imports commands.js, you can use cy.login() in any test.
+
+

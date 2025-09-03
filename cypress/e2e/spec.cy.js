@@ -1,3 +1,4 @@
+
 describe('template spec', () => {
   it('passes', () => {
     cy.visit('https://crud-mvp-frontend.onrender.com/records')
