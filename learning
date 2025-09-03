@@ -126,3 +126,27 @@ it('logs in', () => {
 Because e2e.js imports commands.js, you can use cy.login() in any test.
 
 
+CYPRESS does not use aync/await so need to use like below
++++++++++++++++++++++++++++++++++++++++++++++++
+// Correct: use `.then()` to access value
+basePage.findElement('.my-class').then(($el) => {
+  const text = $el.text();
+  expect(text).to.include('Hello');
+});
+
+// Also correct: chain Cypress commands
+basePage.findElement('.my-class').should('contain.text', 'Hello');
+
+
+In Cypress, there's no special "locator" object.
+Instead, Cypress uses chainable commands like cy.get() or cy.contains(), which return a "subject" that you continue to operate on.
+
+Example:
+cy.get('#username').type('John');
+In Cypress, you'd informally refer to cy.get(selector) as:
+a chainable
+a command
+or just "getting an element"
+But there's no named object like Locator in Playwright.
+
+
