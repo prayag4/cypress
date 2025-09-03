@@ -3,6 +3,12 @@ for SSH authenitcation
 git remote set-url origin git@github-prayag:prayag4/cypress.git                                  
 
 
+set credentials locally for repo 
+++++++++++++++++++++
+git config user.name "Your Name"
+git config user.email "your_email@example.com"
+
+
 cypress install command - npm install cypress --save-dev
 cypress project intialization command - npx cypress open and set confgiguration from window
 
