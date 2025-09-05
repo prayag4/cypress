@@ -1,3 +1,5 @@
+for practice , Need to make one spec.js file and need to include all cypress functions directly in it
+
 for SSH authenitcation 
 +++++++++++++++
 git remote set-url origin git@github-prayag:prayag4/cypress.git                                  
@@ -150,3 +152,24 @@ or just "getting an element"
 But there's no named object like Locator in Playwright.
 
 
+
+CYPRESS SOFT ASSERTION
+++++++++++++++++++++++++
+You can use the cypress-soft-assertions
+ plugin.
+
+Install it:
+
+npm install --save-dev cypress-soft-assertions
+
+
+Then use soft assertions like this:
+
+cy.softAssert(() => {
+  expect(actual).to.equal(expected);
+});   // this will store failures and continue the test 
+
+
+And finally:
+
+cy.softAssertAll(); //will fail the test if any soft assertions failed
