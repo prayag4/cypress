@@ -1,5 +1,6 @@
 import 'cypress-iframe';
 import 'cypress-xpath';
+import 'cypress-soft-assertions'
 
 export default class BasePage {
     goto(url) {
@@ -35,45 +36,69 @@ export default class BasePage {
         return this.getIframeBody(iframeSelector).find(selector).clear().type(text);
     }
 
-    selectDropdownElement(selector,value) {
+    selectDropdownElement(selector, value) {
         return this.findElement(selector).select(value)
     }
 
-    getAttribute(selector,attrName){
-        return this.findElement(selector).invoke('attr',attrName)
+    getAttribute(selector, attrName) {
+        return this.findElement(selector).invoke('attr', attrName)
     }
 
-    uploadFile(selector,filePath){
+    uploadFile(selector, filePath) {
         return this.findElement(selector).selectFile(filePath)
     }
 
     selectDate(day, month, year) {
-    this.findElement('.react-datepicker__year-dropdown-container').click();
-    this.findElement('.react-datepicker__year-option').contains(year).click();
+        this.findElement('.react-datepicker__year-dropdown-container').click();
+        this.findElement('.react-datepicker__year-option').contains(year).click();
 
-    this.findElement('.react-datepicker__month-dropdown-container').click();
-    this.findElement('.react-datepicker__month-option').contains(month).click();
+        this.findElement('.react-datepicker__month-dropdown-container').click();
+        this.findElement('.react-datepicker__month-option').contains(month).click();
 
-    const paddedDay = day.toString().padStart(2, '0');
-    const dateLocator = `div[class*="react-datepicker__day--0${paddedDay}"][aria-label*="${month} ${day}"]`;
-    
-    this.clickElement(dateLocator);
-  }
+        const paddedDay = day.toString().padStart(2, '0');
+        const dateLocator = `div[class*="react-datepicker__day--0${paddedDay}"][aria-label*="${month} ${day}"]`;
+
+        this.clickElement(dateLocator);
+    }
 
     clickElementWithJs(selector) {
-    this.findElement(selector).then(($el) => {
-      $el[0].click();
-    });
-  }
+        this.findElement(selector).then(($el) => {
+            $el[0].click();
+        });
+    }
 
-  getTextContent(selector){
-    return this.findElement(selector).invoke('text')
-  }
+    getTextContent(selector) {
+        return this.findElement(selector).invoke('text')
+    }
 
-  getAllFieldNamesInTable(selector) {
-    cy.get('table tr:last-child td:last-child').should('be.visible');
-    return cy.get(selector).then($els => Cypress._.map($els, 'innerText'));
-  }
+    getAllFieldNamesInTable(selector) {
+        cy.get('table tr:last-child td:last-child').should('be.visible');
+        return cy.get(selector).then($els => Cypress._.map($els, 'innerText'));
+    }
 
+    softAssert(expected, actual) {
+        cy.softAssert(() => {
+            expect(actual).to.equal(expected);
+        });
+    }
+
+    waitForDialogAndReject(){                       //cypress automatically accepts dialog so need to make function of it 
+        cy.on('window:confirm',(message)=>{
+            cy.log(message);
+            return false
+        })
+    }
+
+    findElementWithFilterText(selector,fieldValue){
+        return this.findElement(selector).contains(fieldValue)
+    }
+
+    findElementFromElement(parentSelector,childSelector){
+        return this.findElement(parentSelector).find(childSelector)
+    }
+
+    delay(ms){
+        cy.wait(ms)
+    }
 
 }

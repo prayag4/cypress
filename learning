@@ -173,3 +173,9 @@ cy.softAssert(() => {
 And finally:
 
 cy.softAssertAll(); //will fail the test if any soft assertions failed
+
+
+
+TO MAKE HTML REPORT
++++++++++++++++++++++
+1) npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator --legacy-peer-deps
