@@ -28,7 +28,7 @@
 let itBlockErrors = {}; // Stores errors for each 'it' block title
 let totalFailedAssertionsByDescribe = {}; // Tracks total assertion failures for each "describe" block
 
-Cypress.Commands.add('softAssert', { prevSubject: false }, (actualValue, expectedValue, message) => {
+Cypress.Commands.add('softAssert', { prevSubject: false }, (actualValue, message,expectedValue) => {
   return cy.wrap(null, { timeout: Cypress.config('defaultCommandTimeout') }).then(() => {
     try {
       expect(actualValue).to.equal(expectedValue, message);

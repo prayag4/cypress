@@ -1,6 +1,5 @@
 import 'cypress-iframe';
 import 'cypress-xpath';
-import 'cypress-soft-assertions'
 
 export default class BasePage {
     goto(url) {
@@ -76,10 +75,8 @@ export default class BasePage {
         return cy.get(selector).then($els => Cypress._.map($els, 'innerText'));
     }
 
-    softAssert(expected, actual) {
-        cy.softAssert(() => {
-            expect(actual).to.equal(expected);
-        });
+    softAssert(actual, message, expected) {
+        cy.softAssert(actual,message,expected)        
     }
 
     waitForDialogAndReject(){                       //cypress automatically accepts dialog so need to make function of it 
