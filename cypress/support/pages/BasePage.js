@@ -48,6 +48,7 @@ export default class BasePage {
     }
 
     selectDate(day, month, year) {
+        console.log(day,month,year)
         this.findElement('.react-datepicker__year-dropdown-container').click();
         this.findElement('.react-datepicker__year-option').contains(year).click();
 

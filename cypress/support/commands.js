@@ -24,6 +24,9 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+
+import 'cypress-iframe';
+
 // Global objects to track assertion errors
 let itBlockErrors = {}; // Stores errors for each 'it' block title
 let totalFailedAssertionsByDescribe = {}; // Tracks total assertion failures for each "describe" block

@@ -1,4 +1,8 @@
-
+import 'cypress-iframe';
+import 'cypress-xpath';
+import 'cypress-file-upload'
+import BasePage from '../support/pages/BasePage';
+let basePage = new BasePage()
 import RandomUtility from "../support/utility/RandomUtility"
 let objRandomUtility = new RandomUtility()
 
@@ -36,7 +40,7 @@ describe('check record can be added with all information add or not', () => {
     let singleLineSelector = '#singleLine'
     let multiLineSelector = '#multiLine'
     let editorIframeSelector = 'iframe[id*="tiny-react"]'
-    let editorSelector = '#tinymce'
+    let editorSelector = 'body#tinymce'
     let numberSelector = 'input[id="number"]'
     let emailSelector = '//input[@id="email"]'
     let phoneSelector = 'input[type*="tel"]' //contains method
@@ -51,7 +55,7 @@ describe('check record can be added with all information add or not', () => {
     let timePickerSelector = "#time"
     let locationSelector = "#location"
     let saveButtonSelector = 'button[type="submit"]'
-    let formData
+    let formData = {}
     cy.wrap(null).then(async () => {
       //data preparation
       formData.singleLine = await objRandomUtility.generateRandomString()
@@ -69,6 +73,63 @@ describe('check record can be added with all information add or not', () => {
       formData.dateRange = await objRandomUtility.getRandomDateRange()
       formData.timePicker = await objRandomUtility.generateRandomTime()
       formData.location = await objRandomUtility.getRandomLatLong()
+
+      cy.visit('https://crud-mvp-frontend.onrender.com/records')
+      cy.get('.bg-green-500').click()
+
+      cy.get(singleLineSelector).type(formData.singleLine)
+      cy.get(multiLineSelector).type(formData.multiLine)
+
+      //wait for iframe to get loaded 
+      // cy.frameLoaded(editorIframeSelector)
+      cy.get(editorIframeSelector)
+        .its('0.contentDocument.body')
+        .should('not.be.empty')
+        .then(cy.wrap)
+        .as('tinyMCEEditor')
+
+      cy.get('@tinyMCEEditor').clear().type(formData.editor)
+
+      cy.get(numberSelector).type(formData.number)
+
+      cy.xpath(emailSelector).type(formData.email)
+
+      cy.get(phoneSelector).type(formData.phone)
+
+      cy.get(singleSelectionSelector).select('Option 2')
+
+      cy.get(multiSelectionSelector).select(['Option 1', 'Option 2'])
+
+      cy.get(fileFieldSelector).attachFile('test.png')
+
+      cy.xpath(radioButtonSelector).first().check()
+
+      cy.get(checkboxSelector).first().check()
+
+      //date picker
+      let arrDatepicker = formData.datePicker
+      let dayMonthYear = arrDatepicker[0]
+      cy.get(datePickerSelector).click().then(() => {
+        basePage.selectDate(...dayMonthYear)
+      })
+
+      //date range 
+      let arrDateRange = formData.dateRange
+      let startDayMonthYear = arrDateRange[0]
+      let endDayMonthYear = arrDateRange[2]
+      cy.get(dateRangeStartSelector).click().then(() => {
+        basePage.selectDate(...startDayMonthYear)
+      })
+            cy.get(dateRangeEndSelector).click().then(() => {
+        basePage.selectDate(...endDayMonthYear)
+      })
+
+      cy.get(timePickerSelector).type(formData.timePicker)
+
+      cy.get(locationSelector).type(...formData.location)
+
+      cy.get(saveButtonSelector).click()
+
     })
 
 
