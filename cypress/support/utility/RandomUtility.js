@@ -68,10 +68,11 @@ class RandomUtility {
 
 
 
-    async generateMultipleLineContent(lines = 5) {
+    async generateMultipleLineContent(lines = 1) {
         let content = '';
         for (let i = 0; i < lines; i++) {
-            content += faker.lorem.sentence() + "\n";
+            // content += faker.lorem.sentence() + "\n";
+            content += faker.lorem.sentence();
         }
         return content;
     }

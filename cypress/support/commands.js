@@ -75,3 +75,18 @@ Cypress.Commands.add('assertAll', () => {
     );
   }
 });
+
+Cypress.Commands.add('selectReactDate',
+    (day, month, year)=> {
+        console.log(day,month,year)
+        cy.get('.react-datepicker__year-dropdown-container').click();
+        cy.get('.react-datepicker__year-option').contains(year).click();
+
+        cy.get('.react-datepicker__month-dropdown-container').click();
+        cy.get('.react-datepicker__month-option').contains(month).click();
+
+        const paddedDay = day.toString().padStart(2, '0');
+        const dateLocator = `div[class*="react-datepicker__day--0${paddedDay}"][aria-label*="${month} ${day}"]`;
+
+        cy.get(dateLocator).click();
+    })
