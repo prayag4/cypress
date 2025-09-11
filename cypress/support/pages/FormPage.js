@@ -33,61 +33,64 @@ export default class FormPage extends BasePage {
         if (formData.multiLine) {
             await this.typeinput(this.multiLineSelector, formData.multiLine)
         }
-        // if (formData.editor) {
-        //     const iframe =  this.getIframe(this.editorIframeSelector);
-        //      this.fillFieldIframe(iframe, this.editorSelector, formData.editor);
-        // }
-        if (formData.number) {
-             await this.typeinput(this.numberSelector, formData.number)
+        if (formData.editor) {
+            cy.get(this.editorIframeSelector)
+                .its('0.contentDocument.body')
+                .should('not.be.empty')
+                .then(cy.wrap)
+                .as('tinyMCEEditor')
+
+            cy.get('@tinyMCEEditor').clear().type(formData.editor)
         }
-        // if (formData.email) {
-        //      this.fillField(this.emailSelector, formData.email)
-        // }
-        // if (formData.phone) {
-        //      this.fillField(this.phoneSelector, formData.phone)
-        // }
-        // if (formData.singleSelection) {
-        //     let selectLocator =  this.findElementLocator(this.singleSelectionSelector)
-        //     if (formData.singleSelection = "random") {
-        //         let arrayOptionElements =  this.findSelectTagOptionElements(selectLocator)
-        //         let randomOption =  this.objRandomUtility.getRandomSelectedOneValueFromArray(arrayOptionElements)
-        //         let randomOptionValue =  this.getAttributeFromLocator(randomOption, 'value')
-        //          this.selectOption(selectLocator, randomOptionValue)
-        //         formData.singleSelection = randomOptionValue
-        //     }
-        //     else {
-        //          this.selectOption(selectLocator, formData.singleSelection)
-        //     }
-        // }
-        // if (formData.multiSelection) {
-        //     let selectLocator =  this.findElementLocator(this.multiSelectionSelector)
-        //     if (formData.multiSelection = "random") {
-        //         let arrayOptionElements =  this.findSelectTagOptionElements(selectLocator)
-        //         let randomOptions =  this.objRandomUtility.getRandomSelectedValuesFromArray(arrayOptionElements)
-        //         let arrayRandomOptionValue =  Promise.all(randomOptions.map(async (randomOption) => { return  this.getAttributeFromLocator(randomOption, 'value') }))
-        //          this.selectOption(selectLocator, arrayRandomOptionValue)
-        //         formData.multiSelection = arrayRandomOptionValue
-        //     }
-        //     else {
-        //          this.selectOption(selectLocator, formData.multiSelection)
-        //     }
-        // }
-        // if (formData.file) {
-        //     let fileFieldLocator =  this.findElementLocator(this.fileFieldSelector)
-        //      this.uploadFile(fileFieldLocator, formData.file)
-        // }
-        // if (formData.radioButton) {
-        //     if (formData.radioButton = "random") {
-        //         let arrayOptionElements =  this.findAllElementLocators(this.radioButtonSelector)
-        //         let randomOption =  this.objRandomUtility.getRandomSelectedOneValueFromArray(arrayOptionElements)
-        //         let randomOptionValue =  this.getAttributeFromLocator(randomOption, 'value')
-        //          this.clickElement(randomOption)
-        //         formData.radioButton = randomOptionValue
-        //     }
-        //     else {
-        //          this.clickElement(randomOption)
-        //     }
-        // }
+        if (formData.number) {
+            await this.typeinput(this.numberSelector, formData.number)
+        }
+        if (formData.email) {
+            await this.typeinput(this.emailSelector, formData.email)
+        }
+        if (formData.phone) {
+            await this.typeinput(this.phoneSelector, formData.phone)
+        }
+        if (formData.singleSelection) {
+            this.findElementFromElement(this.singleSelectionSelector, 'option').then(async (arrayOptionElements) => {
+                let randomOption = await this.objRandomUtility.getRandomSelectedOneValueFromArray(arrayOptionElements)
+                let randomOptionValue = await randomOption.value;
+                await this.selectDropdownElement(this.singleSelectionSelector, randomOptionValue)
+                formData.singleSelection = randomOptionValue
+
+            })
+        }
+        else {
+            await this.selectDropdownElement(this.singleSelectionSelector, formData.singleSelection)
+        }
+
+        if (formData.multiSelection) {
+            this.findElementFromElement(this.multiSelectionSelector, 'option').then(async (arrayOptionElements) => {
+                let randomOptions = await this.objRandomUtility.getRandomSelectedValuesFromArray(arrayOptionElements)
+                let arrRandomOptionValue = await Promise.all(randomOptions.map(async option=>await option.value))
+                await this.selectDropdownElement(this.multiSelectionSelector, arrRandomOptionValue)
+                formData.multiSelection = arrRandomOptionValue
+            })
+        }
+        else {
+            await this.selectDropdownElement(this.multiSelectionSelector, formData.singleSelection)
+        }
+        if (formData.file) {
+            await this.uploadFile(this.fileFieldSelector,formData.file)
+        }
+        if (formData.radioButton) {
+            if (formData.radioButton = "random") {
+                await this.findElement(this.radioButtonSelector).then(async options=>{
+                let randomOption =  await this.objRandomUtility.getRandomSelectedOneValueFromArray(arrayOptionElements)
+                let randomOptionValue =  await randomOption.value
+                this.clickElement(randomOption)
+                formData.radioButton = randomOptionValue
+                })
+            }
+            else {
+                 this.clickElement(randomOption)
+            }
+        }
         // if (formData.checkbox) {
         //     if (formData.checkbox = "random") {
         //         let arrayOptionElements =  this.findAllElementLocators(this.checkboxSelector)
@@ -120,19 +123,19 @@ export default class FormPage extends BasePage {
 
         //     formData.dateRange = [ (formData.dateRange)[1], (formData.dateRange)[3]]
         // }
-        // if(formData.timePicker){
-        //      this.fillField(this.timePickerSelector, formData.timePicker)
-        // }
-        // if(formData.location){
-        //      this.fillField(this.locationSelector,  (formData.location).join(","))
-        //     formData.location =  (formData.location).join(",")
-        // }
+        if(formData.timePicker){
+             await this.typeinput(this.timePickerSelector, formData.timePicker)
+        }
+        if(formData.location){
+            await this.typeinput(this.locationSelector,  (formData.location).join(","))
+            formData.location =  (formData.location).join(",")
+        }
         return formData
 
     }
 
-       async submitForm() {
-         await this.clickElement(this.saveButtonSelector)
+    async submitForm() {
+        await this.clickElement(this.saveButtonSelector)
     }
 
 }
