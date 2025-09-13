@@ -31,6 +31,8 @@ describe('check record can be added with all information', () => {
 
             await formPage.fillForm(formData)
 
+            await formPage.submitForm()
+
         })
     })
 })

@@ -109,24 +109,23 @@ export default class FormPage extends BasePage {
             }
         }
         if (formData.datePicker) {
-            this.clickElementBySelector(this.datePickerSelector).then(async () => {
-                let arrayDatePicker = (formData.datePicker)[0]
-                this.selectDate(...arrayDatePicker)
-                formData.datePicker = (formData.datePicker)[1]
-            })
+            this.clickElementBySelector(this.datePickerSelector)
+            let arrayDatePicker = (formData.datePicker)[0]
+            this.selectDate(...arrayDatePicker)
+            formData.datePicker = (formData.datePicker)[1]
 
         }
         if (formData.dateRange) {
-            cy.log("date range",(formData.dateRange)[2])
-            // this.clickElementBySelector(this.dateRangeStartSelector).then(async () => {
-            //     let arrayStartDatePicker = await (formData.dateRange)[0]
-            //     this.selectDate(...arrayStartDatePicker)
-            // })
-            this.clickElementBySelector(this.dateRangeEndSelector).then(async () => {
-                let arrayEndDatePicker = (formData.dateRange)[2]
-                cy.log(arrayEndDatePicker)
-                // this.selectDate(...arrayEndDatePicker)
-            })
+            cy.log("date range", (formData.dateRange)[2])
+            this.clickElementBySelector(this.dateRangeStartSelector)
+            let arrayStartDatePicker = await (formData.dateRange)[0]
+            this.selectDate(...arrayStartDatePicker)
+
+            this.clickElementBySelector(this.dateRangeEndSelector)
+            let arrayEndDatePicker = (formData.dateRange)[2]
+            cy.log(arrayEndDatePicker)
+            this.selectDate(...arrayEndDatePicker)
+
 
             formData.dateRange = [(formData.dateRange)[1], (formData.dateRange)[3]]
         }
@@ -142,7 +141,7 @@ export default class FormPage extends BasePage {
     }
 
     async submitForm() {
-        await this.clickElement(this.saveButtonSelector)
+        await this.clickElementBySelector(this.saveButtonSelector)
     }
 
 }
