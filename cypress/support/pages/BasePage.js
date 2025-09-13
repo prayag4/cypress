@@ -15,8 +15,12 @@ export default class BasePage {
         return isXPath ? cy.xpath(selector) : cy.get(selector);
     }
 
-    clickElement(selector) {
+    clickElementBySelector(selector) {
         return this.findElement(selector).click();
+    }
+
+    clickElement(element){
+        return cy.wrap(element).click()
     }
 
     typeinput(selector, text) {
@@ -39,6 +43,10 @@ export default class BasePage {
         return this.findElement(selector).select(value)
     }
 
+    checkRadioORCheckboxButton(selector,value){
+        return this.findElement(selector).check(value)
+    }
+
     getAttribute(selector, attrName) {
         return this.findElement(selector).invoke('attr', attrName)
     }
@@ -48,7 +56,6 @@ export default class BasePage {
     }
 
     selectDate(day, month, year) {
-        console.log(day,month,year)
         this.findElement('.react-datepicker__year-dropdown-container').click();
         this.findElement('.react-datepicker__year-option').contains(year).click();
 
@@ -58,7 +65,7 @@ export default class BasePage {
         const paddedDay = day.toString().padStart(2, '0');
         const dateLocator = `div[class*="react-datepicker__day--0${paddedDay}"][aria-label*="${month} ${day}"]`;
 
-        this.clickElement(dateLocator);
+        this.clickElementBySelector(dateLocator);
     }
 
     clickElementWithJs(selector) {
@@ -77,25 +84,25 @@ export default class BasePage {
     }
 
     softAssert(actual, message, expected) {
-        cy.softAssert(actual,message,expected)        
+        cy.softAssert(actual, message, expected)
     }
 
-    waitForDialogAndReject(){                       //cypress automatically accepts dialog so need to make function of it 
-        cy.on('window:confirm',(message)=>{
+    waitForDialogAndReject() {                       //cypress automatically accepts dialog so need to make function of it 
+        cy.on('window:confirm', (message) => {
             cy.log(message);
             return false
         })
     }
 
-    findElementWithFilterText(selector,fieldValue){
+    findElementWithFilterText(selector, fieldValue) {
         return this.findElement(selector).contains(fieldValue)
     }
 
-    findElementFromElement(parentSelector,childSelector){
+    findElementFromElement(parentSelector, childSelector) {
         return this.findElement(parentSelector).find(childSelector)
     }
 
-    delay(ms){
+    delay(ms) {
         cy.wait(ms)
     }
 

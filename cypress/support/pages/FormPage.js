@@ -67,7 +67,7 @@ export default class FormPage extends BasePage {
         if (formData.multiSelection) {
             this.findElementFromElement(this.multiSelectionSelector, 'option').then(async (arrayOptionElements) => {
                 let randomOptions = await this.objRandomUtility.getRandomSelectedValuesFromArray(arrayOptionElements)
-                let arrRandomOptionValue = await Promise.all(randomOptions.map(async option=>await option.value))
+                let arrRandomOptionValue = await Promise.all(randomOptions.map(async option => await option.value))
                 await this.selectDropdownElement(this.multiSelectionSelector, arrRandomOptionValue)
                 formData.multiSelection = arrRandomOptionValue
             })
@@ -76,59 +76,66 @@ export default class FormPage extends BasePage {
             await this.selectDropdownElement(this.multiSelectionSelector, formData.singleSelection)
         }
         if (formData.file) {
-            await this.uploadFile(this.fileFieldSelector,formData.file)
+            await this.uploadFile(this.fileFieldSelector, formData.file)
         }
         if (formData.radioButton) {
             if (formData.radioButton = "random") {
-                await this.findElement(this.radioButtonSelector).then(async options=>{
-                let randomOption =  await this.objRandomUtility.getRandomSelectedOneValueFromArray(arrayOptionElements)
-                let randomOptionValue =  await randomOption.value
-                this.clickElement(randomOption)
-                formData.radioButton = randomOptionValue
+                this.findElement(this.radioButtonSelector).then(async options => {
+                    let randomOption = await this.objRandomUtility.getRandomSelectedOneValueFromArray(options)
+                    let randomOptionValue = await randomOption.value
+                    await this.checkRadioORCheckboxButton(this.radioButtonSelector, randomOptionValue)
+                    formData.radioButton = randomOptionValue
                 })
             }
             else {
-                 this.clickElement(randomOption)
+                this.checkRadioORCheckboxButton(this.radioButtonSelector, formData.radioButton)
             }
         }
-        // if (formData.checkbox) {
-        //     if (formData.checkbox = "random") {
-        //         let arrayOptionElements =  this.findAllElementLocators(this.checkboxSelector)
-        //         let randomOptions =  this.objRandomUtility.getRandomSelectedValuesFromArray(arrayOptionElements)
-        //         let arrayRandomOptionValue =  Promise.all(randomOptions.map(async (randomOption) => { return ( randomOption.locator('xpath=following-sibling::span')).textContent(); }))
-        //         for (let chk of randomOptions) {  this.clickElement(chk) }
-        //         formData.checkbox = arrayRandomOptionValue
-        //     }
-        //     else {
-        //         for (let chk of formData.checkbox) {  this.clickElement(chk) }
-        //     }
-        // }
-        // if (formData.datePicker) {
-        //     let datePickerLocator =  this.findElementLocator(this.datePickerSelector)
-        //      this.clickElement(datePickerLocator)
-        //     let arrayDatePicker =  (formData.datePicker)[0]
-        //      this.selectDate(...arrayDatePicker)
-        //     formData.datePicker = (formData.datePicker)[1]
-        // }
-        // if (formData.dateRange) {
-        //     let startDatePickerLocator =  this.findElementLocator(this.dateRangeStartSelector)
-        //      this.clickElement(startDatePickerLocator)
-        //     let arrayStartDatePicker =  (formData.dateRange)[0]
-        //      this.selectDate(...arrayStartDatePicker)
+        if (formData.checkbox) {
+            if (formData.checkbox = "random") {
+                this.findElement(this.checkboxSelector).then(async ($options) => {
+                    const randomOptions = await this.objRandomUtility.getRandomSelectedValuesFromArray($options); // assume this is sync
 
-        //     let endDatePickerLocator =  this.findElementLocator(this.dateRangeEndSelector)
-        //      this.clickElement(endDatePickerLocator)
-        //     let arrayEndDatePicker =  (formData.dateRange)[2]
-        //      this.selectDate(...arrayEndDatePicker)
+                    formData.checkbox = [];
 
-        //     formData.dateRange = [ (formData.dateRange)[1], (formData.dateRange)[3]]
-        // }
-        if(formData.timePicker){
-             await this.typeinput(this.timePickerSelector, formData.timePicker)
+                    randomOptions.forEach(async (element) => {
+                        await this.clickElement(element); // Cypress handles click timing
+                        formData.checkbox.push(element.value);
+                    });
+                });
+            }
+            else {
+                this.checkRadioORCheckboxButton(this.checkboxSelector, formData.checkbox)
+            }
         }
-        if(formData.location){
-            await this.typeinput(this.locationSelector,  (formData.location).join(","))
-            formData.location =  (formData.location).join(",")
+        if (formData.datePicker) {
+            this.clickElementBySelector(this.datePickerSelector).then(async () => {
+                let arrayDatePicker = (formData.datePicker)[0]
+                this.selectDate(...arrayDatePicker)
+                formData.datePicker = (formData.datePicker)[1]
+            })
+
+        }
+        if (formData.dateRange) {
+            cy.log("date range",(formData.dateRange)[2])
+            // this.clickElementBySelector(this.dateRangeStartSelector).then(async () => {
+            //     let arrayStartDatePicker = await (formData.dateRange)[0]
+            //     this.selectDate(...arrayStartDatePicker)
+            // })
+            this.clickElementBySelector(this.dateRangeEndSelector).then(async () => {
+                let arrayEndDatePicker = (formData.dateRange)[2]
+                cy.log(arrayEndDatePicker)
+                // this.selectDate(...arrayEndDatePicker)
+            })
+
+            formData.dateRange = [(formData.dateRange)[1], (formData.dateRange)[3]]
+        }
+        if (formData.timePicker) {
+            await this.typeinput(this.timePickerSelector, formData.timePicker)
+        }
+        if (formData.location) {
+            await this.typeinput(this.locationSelector, (formData.location).join(","))
+            formData.location = (formData.location).join(",")
         }
         return formData
 
