@@ -19,7 +19,7 @@ export default class BasePage {
         return this.findElement(selector).click();
     }
 
-    clickElement(element){
+    clickElement(element) {
         return cy.wrap(element).click()
     }
 
@@ -43,7 +43,7 @@ export default class BasePage {
         return this.findElement(selector).select(value)
     }
 
-    checkRadioORCheckboxButton(selector,value){
+    checkRadioORCheckboxButton(selector, value) {
         return this.findElement(selector).check(value)
     }
 
@@ -74,11 +74,19 @@ export default class BasePage {
         });
     }
 
+    getTextContentOfTable(selector) {
+        return this.findElement(selector).then(element => {
+            return element.text()
+        });
+    }
+
+
     getTextContent(selector) {
         return this.findElement(selector).invoke('text')
     }
 
     getAllFieldNamesInTable(selector) {
+        cy.wait(2000)
         cy.get('table tr:last-child td:last-child').should('be.visible');
         return cy.get(selector).then($els => Cypress._.map($els, 'innerText'));
     }

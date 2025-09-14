@@ -162,5 +162,5 @@ Pending things
 ++++++++
 1. compare with playwright config.js to know about features like video, screenshot etc
 also need to check cypress run command - is it providing any report format ?
-2. set up URL in environment variable 
-3. Need to make HTML report 
+2. set up URL in environment variable - done 
+3. Need to make HTML report - 

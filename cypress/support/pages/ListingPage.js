@@ -4,6 +4,7 @@ export default class ListingPage extends BasePage {
     constructor() {
         super()
         this.deleteButtonSelector = '//button[text()="Delete"]'
+        this.addButtonSelector = ".bg-green-500"
     }
 
     async goToListingPage() {
@@ -11,19 +12,20 @@ export default class ListingPage extends BasePage {
     }
 
     async clickOnAddButton() {
-        let element = await this.findElementLocatorWithGetByRole('button', { name: "Add Record" });
-        await this.clickElement(element)
+        return await this.clickElementBySelector(this.addButtonSelector);
     }
 
-    async getLatestTableValue(columnName) {
-        let arrFieldNamesInTable = await this.findLocatorAndGetALLFieldNamesInTable('table thead tr th')
-        let columnIndex = (await arrFieldNamesInTable.indexOf(columnName)) + 1
-        let latestColumnNameSelector = `table tr:last-child td:nth-child(${columnIndex})`
-        let cellValue = await this.findLocatorAndGetTextConent(latestColumnNameSelector)
-        return cellValue
-    }
+    getLatestTableValue(columnName) {
+  return this.getAllFieldNamesInTable('table thead tr th').then((arrFieldNamesInTable) => {
+    const columnIndex = arrFieldNamesInTable.indexOf(columnName) + 1;
+    const latestColumnSelector = `table tr:last-child td:nth-child(${columnIndex})`;
+    return this.getTextContentOfTable(latestColumnSelector); // returning this chain!
+  });
+}
 
-    
+
+
+
     async deleteRecord(fieldValue) {
         let row = await this.findLocatorWithFilterText("table tr", fieldValue)
         let deleteButtonLocator = await this.findLocatorFromLocator(row, this.deleteButtonSelector)

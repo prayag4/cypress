@@ -115,7 +115,6 @@ export default class FormPage extends BasePage {
 
         }
         if (formData.dateRange) {
-            cy.log("date range", (formData.dateRange)[2])
             this.clickElementBySelector(this.dateRangeStartSelector)
             let arrayStartDatePicker = await (formData.dateRange)[0]
             this.selectDate(...arrayStartDatePicker)
