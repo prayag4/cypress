@@ -39,6 +39,6 @@ describe('check record can be added with all information', () => {
 
         //delete the record
         listingPage.deleteRecord(formData.singleLine)
-
+        
     })
 })
