@@ -28,7 +28,11 @@ module.exports = defineConfig({
       require('cypress-mochawesome-reporter/plugin')(on);
       return config;
     },
-    baseUrl: process.env.BASE_URL
+    baseUrl: process.env.BASE_URL,
+    retries: {
+      runMode: 2,   // Retries when running via CLI (e.g. CI)
+      openMode: 0   // Retries when running via Cypress GUI
+    },
     // supportFile: 'cypress/support/e2e.js'
   },
 });
