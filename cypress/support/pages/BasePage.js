@@ -75,7 +75,7 @@ export default class BasePage {
     }
 
     getTextContentOfTable(selector) {
-        return this.findElement(selector).then(element => {
+        this.findElement(selector).then(element => {
             return element.text()
         });
     }

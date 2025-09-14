@@ -8,37 +8,34 @@ let listingPage = new ListingPage()
 
 describe('check record can be added with all information', () => {
     it('should be added with all information', () => {
-        cy.wrap(null).then(async () => {
-            await listingPage.goToListingPage()
-            await listingPage.clickOnAddButton();
+        listingPage.goToListingPage()
+        listingPage.clickOnAddButton();
 
-            let formData = {}
-            //data preparation
-            formData.singleLine = await objRandomUtility.generateRandomString()
-            formData.multiLine = await objRandomUtility.generateMultipleLineContent()
-            formData.editor = await objRandomUtility.generateMultipleLineContent()
-            formData.number = await objRandomUtility.generateRandomNumber()
-            formData.email = await objRandomUtility.generateRandomEmail()
-            formData.phone = await objRandomUtility.generateFakePhoneNumber()
-            formData.singleSelection = "random"
-            formData.multiSelection = "random"
-            formData.file = "cypress/fixtures/test.png"
-            formData.radioButton = "random"
-            formData.checkbox = "random"
-            formData.datePicker = await objRandomUtility.getRandomDate()
-            formData.dateRange = await objRandomUtility.getRandomDateRange()
-            formData.timePicker = await objRandomUtility.generateRandomTime()
-            formData.location = await objRandomUtility.getRandomLatLong()
+        let formData = {}
+        //data preparation
+        formData.singleLine = objRandomUtility.generateRandomString()
+        formData.multiLine = objRandomUtility.generateMultipleLineContent()
+        formData.editor = objRandomUtility.generateMultipleLineContent()
+        formData.number = objRandomUtility.generateRandomNumber()
+        formData.email = objRandomUtility.generateRandomEmail()
+        formData.phone = objRandomUtility.generateFakePhoneNumber()
+        formData.singleSelection = "random"
+        formData.multiSelection = "random"
+        formData.file = "cypress/fixtures/test.png"
+        formData.radioButton = "random"
+        formData.checkbox = "random"
+        formData.datePicker = objRandomUtility.getRandomDate()
+        formData.dateRange = objRandomUtility.getRandomDateRange()
+        formData.timePicker = objRandomUtility.generateRandomTime()
+        formData.location = objRandomUtility.getRandomLatLong()
 
-            await formPage.fillForm(formData)
-            await formPage.submitForm()
+        formPage.fillForm(formData)
+        formPage.submitForm()
 
-            //verfiy data in table listing
-            listingPage.getLatestTableValue("Single Line").then((value)=>{
-        cy.softAssert(value, "check singleline value in table is right or not", formData.singleLine)
-            })
-            // let expectedSingleLineValue = await addedFormData.singleLine
-
+        //verfiy data in table listing
+        listingPage.getLatestTableValue("Single Line").then((value) => {
+            cy.softAssert(value, "check singleline value in table is right or not", formData.singleLine)
         })
+
     })
 })
