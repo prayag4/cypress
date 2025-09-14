@@ -1,6 +1,5 @@
 import BasePage from "./BasePage";
 import RandomUtility from "../utility/RandomUtility";
-let objRandomUtility = new RandomUtility();
 
 export default class FormPage extends BasePage {
     constructor() {
