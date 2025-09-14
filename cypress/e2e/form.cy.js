@@ -37,5 +37,8 @@ describe('check record can be added with all information', () => {
             cy.softAssert(value, "check singleline value in table is right or not", formData.singleLine)
         })
 
+        //delete the record
+        listingPage.deleteRecord(formData.singleLine)
+
     })
 })

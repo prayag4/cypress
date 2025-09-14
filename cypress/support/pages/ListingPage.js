@@ -3,7 +3,7 @@ import BasePage from "./BasePage";
 export default class ListingPage extends BasePage {
     constructor() {
         super()
-        this.deleteButtonSelector = '//button[text()="Delete"]'
+        this.deleteButtonSelector = '.bg-red-500'
         this.addButtonSelector = ".bg-green-500"
     }
 
@@ -23,13 +23,7 @@ export default class ListingPage extends BasePage {
         });
     }
 
-
-
-
     deleteRecord(fieldValue) {
-        let row = this.findLocatorWithFilterText("table tr", fieldValue)
-        let deleteButtonLocator = this.findLocatorFromLocator(row, this.deleteButtonSelector)
-        this.waitForDialogAndAccept()
-        this.clickElement(deleteButtonLocator)
+        this.findButtonIntable(fieldValue,this.deleteButtonSelector)
     }
 }

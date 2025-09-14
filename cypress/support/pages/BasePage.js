@@ -114,4 +114,10 @@ export default class BasePage {
         cy.wait(ms)
     }
 
+    findButtonIntable(fieldValue,buttonSelector) {
+        cy.contains('tr', fieldValue)
+            .find(buttonSelector)
+            .click()
+    }
+
 }
